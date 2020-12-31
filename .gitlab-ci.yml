@@ -1,0 +1,23 @@
+stages:
+  - deploy
+
+
+deploy:
+  before_script:
+    - docker login -u ${dockerhub_id} -p ${dockerhub_password}
+
+  stage: deploy
+
+  image: docker
+
+  services:
+    - name: docker:dind
+
+  variables:
+    VERSION: v1.0
+
+  script:
+    - docker build -t jhkimdocker/busapi:{VERSION} .
+
+    - docker push jhkimdocker/busapi:{VERSION}
+
