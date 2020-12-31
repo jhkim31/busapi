@@ -17,7 +17,7 @@ deploy:
     VERSION: v1.0
 
   script:
-    - docker build -t jhkimdocker/busapi:v1.1 .
+    - docker build -t jhkimdocker/busapi:${VERSION} .
 
     - docker push jhkimdocker/busapi:{VERSION}
 
