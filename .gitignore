@@ -1,9 +1,9 @@
-/.project
-/.pydevproject
-/__init__.cpython-37.pyc
-/getNearlyStationList.cpython-37.pyc
-/getRouteInfo.cpython-37.pyc
-/getStationInfo.cpython-37.pyc
-/.project
-/.pydevproject
+.project
+.pydevproject
+__init__.cpython-37.pyc
+getNearlyStationList.cpython-37.pyc
+getRouteInfo.cpython-37.pyc
+getStationInfo.cpython-37.pyc
+.project
+.pydevproject
 .dbeaver
