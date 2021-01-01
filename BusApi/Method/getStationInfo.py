@@ -40,7 +40,7 @@ def getStationInfo(mobileNo):
     coordinate['latitude'] = y
     coordinate['longitude'] = x
     tmp['coordinate'] = coordinate
-    tmp['througRouteList'] = throughRouteList
+    tmp['throughRouteList'] = throughRouteList
 
     return tmp
 

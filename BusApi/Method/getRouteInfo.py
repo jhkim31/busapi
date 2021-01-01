@@ -63,13 +63,19 @@ def getRouteInfo(routeId):
         operationInfo['upLastTime'] = "제공되지 않습니다."
         
     try:
-        operationInfo['peekAlloc'] = jsons['response']['msgBody']['busRouteInfoItem']['peekAlloc']
+        if jsons['response']['msgBody']['busRouteInfoItem']['peekAlloc'] == "0":
+            operationInfo['peekAlloc'] = "제공되지 않습니다."
+        else:
+            operationInfo['peekAlloc'] = jsons['response']['msgBody']['busRouteInfoItem']['peekAlloc']
         #옵션값 
     except:
         operationInfo['peekAlloc'] = "제공되지 않습니다."
         
     try:
-        operationInfo['nPeekAlloc'] = jsons['response']['msgBody']['busRouteInfoItem']['nPeekAlloc']
+        if operationInfo['nPeekAlloc'] == jsons['response']['msgBody']['busRouteInfoItem']['nPeekAlloc'] == "0":
+            operationInfo['nPeekAlloc'] = "제공되지 않습니다."
+        else:
+            operationInfo['nPeekAlloc'] = jsons['response']['msgBody']['busRouteInfoItem']['nPeekAlloc']
     except:
         operationInfo['nPeekAlloc'] = "제공되지 않습니다. "
     
