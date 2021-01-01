@@ -11,7 +11,8 @@ def getRouteInfo(routeId):
     dicts = xmltodict.parse(data.text)
     jsons = json.loads(json.dumps(dicts))
     
-#     pprint(jsons['response']['msgBody']['busRouteInfoItem'])
+    
+    pprint(jsons['response']['msgBody']['busRouteInfoItem'])
     
     operationInfo = {}
     
@@ -90,7 +91,7 @@ def getRouteInfo(routeId):
     dicts = xmltodict.parse(data.text)
     jsons = json.loads(json.dumps(dicts))
     stationLists = []
-#     pprint(jsons['response']['msgBody']['busRouteStationList'])
+    pprint(jsons['response']['msgBody']['busRouteStationList'])
     
     for station in jsons['response']['msgBody']['busRouteStationList']:
         tmp = {}

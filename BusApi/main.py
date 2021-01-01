@@ -22,7 +22,8 @@ def getRoute():
 @app.route('/getStationInfo')
 def getStation():
     mobileNo = request.args.get('mobileNo')
-    return getStationInfo(mobileNo)
+    stationId = request.args.get('stationId')
+    return getStationInfo(mobileNo, stationId)
 
 @app.route('/getNearlyStationList')
 def getNearlyStation():

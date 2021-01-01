@@ -3,24 +3,33 @@ from pprint import pprint
 import xmltodict
 import json
 
-def getStationInfo(mobileNo):
+def getStationInfo(mobileNo, stationId):
     
     data = requests.get('http://openapi.gbis.go.kr/ws/rest/busstationservice?serviceKey=yt0l1Mg%2FKtX60m%2B69cYQn%2BOIKLJEq3NMxGQDtVon3JJMgJMV4aRyIEChiBKM1Gi6EzwmOeP1dNQRSRTlPg9cvg%3D%3D&keyword=' + str(mobileNo))
     dicts = xmltodict.parse(data.text)
     jsons = json.loads(json.dumps(dicts))
+    item = {}
+    pprint(jsons['response']['msgBody']['busStationList'])
+    if type(jsons['response']['msgBody']['busStationList']) == type(list()):
+        for i in jsons['response']['msgBody']['busStationList']:
+            if i['stationId'] == stationId:
+                item = i
+    else:
+        item = jsons['response']['msgBody']['busStationList']
+    pprint(item)
+    print('debug')
+    stationIds = item['stationId']
+    stationName = item['stationName']
+    x = item['x']
+    y = item['y']
+    mobileNo = item['mobileNo']
     
-#     pprint(jsons['response']['msgBody']['busStationList'])
-    
-    stationId = jsons['response']['msgBody']['busStationList']['stationId']
-    stationName = jsons['response']['msgBody']['busStationList']['stationName']
-    x = jsons['response']['msgBody']['busStationList']['x']
-    y = jsons['response']['msgBody']['busStationList']['y']
-    mobileNo = jsons['response']['msgBody']['busStationList']['mobileNo']
     throughRouteList = []
     
     data = requests.get('http://openapi.gbis.go.kr/ws/rest/busstationservice/route?serviceKey=yt0l1Mg%2FKtX60m%2B69cYQn%2BOIKLJEq3NMxGQDtVon3JJMgJMV4aRyIEChiBKM1Gi6EzwmOeP1dNQRSRTlPg9cvg%3D%3D&stationId=' + str(stationId))
     dicts = xmltodict.parse(data.text)
     jsons = json.loads(json.dumps(dicts))
+    pprint(jsons)
     
 #     pprint(jsons['response']['msgBody']['busRouteList'])
     
@@ -33,7 +42,7 @@ def getStationInfo(mobileNo):
 #     pprint(throughRouteList)
     
     tmp = {}
-    tmp['stationId'] = stationId
+    tmp['stationId'] = stationIds
     tmp['stationName'] = stationName
     tmp['mobileNo'] = mobileNo
     coordinate = {}
