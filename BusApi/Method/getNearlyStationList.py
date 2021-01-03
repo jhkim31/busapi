@@ -9,6 +9,7 @@ def getNearlyStationList(latitude, longitude):
     jsons = json.loads(json.dumps(dicts))
     
     returnData = {}
+    pprint(jsons['response']['msgBody']['busStationAroundList'])
     
     returnData['nearlyStationList'] = jsons['response']['msgBody']['busStationAroundList']
     
