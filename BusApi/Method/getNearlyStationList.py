@@ -14,8 +14,3 @@ def getNearlyStationList(latitude, longitude):
     returnData['nearlyStationList'] = jsons['response']['msgBody']['busStationAroundList']
     
     return returnData
-        
-    
-    
-    
-    

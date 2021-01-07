@@ -65,10 +65,12 @@ def getStationInfo(mobileNo, stationId):
                     tmp = {}
                     tmp['routeId'] = route['routeId']
                     tmp['routeName'] = route['routeName']
+                    tmp['staOrder'] = route['staOrder']
                     throughRouteList.append(tmp)
             else:
                 tmp['routeId'] = jsons['response']['msgBody']['busRouteList']['routeId']
                 tmp['routeName'] = jsons['response']['msgBody']['busRouteList']['routeName']
+                tmp['staOrder'] = jsons['response']['msgBody']['busRouteList']['staOrder']
                 throughRouteList.append(tmp)
 
             resultBody['throughRouteList'] = throughRouteList    
@@ -88,7 +90,7 @@ def getStationInfo(mobileNo, stationId):
                 resultHeader['resultMsg'] = resultMsg[5]
         
     else:
-        if code.status_code != 200:
+        if data.status_code != 200:
             print("통신오류")
             resultHeader['resultCode'] = '1'
             resultHeader['resultMsg'] = resultMsg[1]
@@ -97,7 +99,7 @@ def getStationInfo(mobileNo, stationId):
             resultHeader['resultCode'] = '2'
             resultHeader['resultMsg'] = resultMsg[2]
     
-            
+
             
     resultData = {}
     resultData['resultHeader'] = resultHeader

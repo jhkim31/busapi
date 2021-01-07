@@ -3,6 +3,7 @@ from flask import request
 from Method.getRouteInfo import getRouteInfo
 from Method.getStationInfo import getStationInfo
 from Method.getNearlyStationList import getNearlyStationList
+from Method.getArrivalInformation import getArrivalInformation
 
 
 app = Flask(__name__)
@@ -30,6 +31,11 @@ def getNearlyStation():
     latitude = request.args.get('latitude')
     longitude = request.args.get('longitude')
     return getNearlyStationList(latitude = latitude, longitude = longitude)
+
+@app.route('/getArrivalInformation')
+def getArrival():
+    stationId = request.args.get('stationId')
+    return getArrivalInformation(stationId)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug= True)
     
