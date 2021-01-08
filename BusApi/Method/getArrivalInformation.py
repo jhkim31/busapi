@@ -22,6 +22,7 @@ def getArrivalInformation(stationId):
     busArrivalList = []
     resultBody = {}
     resultHeader= {}
+    pprint(jsons)
     if jsons['response']['msgHeader']['resultCode'] == "0":
         lists = jsons['response']['msgBody']['busArrivalList']
         if type(lists) == type(list()):
@@ -40,7 +41,7 @@ def getArrivalInformation(stationId):
                 busArrivalList.append(tmp)
                 resultBody['busArrivalList'] = busArrivalList
                 
-                resultHeader['resultCode'] = '0'
+                resultHeader['resultCode'] = '10'
                 resultHeader['resultMsg'] = resultMsg[0]
                 
         else:
@@ -58,14 +59,14 @@ def getArrivalInformation(stationId):
             busArrivalList.append(tmp)
             resultBody['busArrivalList'] = busArrivalList
                 
-            resultHeader['resultCode'] = '0'
+            resultHeader['resultCode'] = '10'
             resultHeader['resultMsg'] = resultMsg[0]
             
         resultData['resultHeader'] = resultHeader
         resultData['resultBody'] = resultBody
             
     elif jsons['response']['msgHeader']['resultCode'] == "4":
-        resultHeader['resultCode'] = '1'
+        resultHeader['resultCode'] = '11'
         resultHeader['resultMsg'] = resultMsg[1]
         resultData['resultHeader'] = resultHeader
     pprint(resultData)
