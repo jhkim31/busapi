@@ -4,6 +4,7 @@ from Method.getRouteInfo import getRouteInfo
 from Method.getStationInfo import getStationInfo
 from Method.getNearlyStationList import getNearlyStationList
 from Method.getArrivalInformation import getArrivalInformation
+from Method.getCurrentLocation import getCurrentLocation
 
 
 app = Flask(__name__)
@@ -14,7 +15,7 @@ def hello_world():
     returnData = {}
     returnData['KIm'] = '김'
     return returnData
-
+ 
 @app.route('/getRouteInfo')
 def getRoute():    
     routeId = request.args.get('routeId')
@@ -36,6 +37,11 @@ def getNearlyStation():
 def getArrival():
     stationId = request.args.get('stationId')
     return getArrivalInformation(stationId)
+@app.route('/getCurrentLocation')
+def getCurrent():
+    routeId = request.args.get('routeId')
+    return getCurrentLocation(routeId)
+    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug= True)
     

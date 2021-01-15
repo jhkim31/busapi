@@ -3,28 +3,28 @@ from pprint import pprint
 import xmltodict
 import json
 
-resultMsg = ['정상처리', '남은 버스가 없습니다', '노선 ID value Error', '정거장리스트 통신 에러', '노선 리스트 정보 에러', '관할지역이 아닙니다.', '노선 ID value Error']    
+resultMsg = [
+    '정상처리', 
+    '남은 버스가 없습니다'
+]   
 
 
 # 0 : 정상처리
-# 1 : 남은 버스가 없습니다.
-# 2 : 노선 ID value Error 
-# 3 : 정거장리스트 통신 에러
-# 4 : 관할지역 아님 
-# 5 : 노선ID value Error
-# 9 : 알수없는 오류입니다.
+# 1 : 남은 버스 없음.  
 
 def getArrivalInformation(stationId):
     data = requests.get('http://openapi.gbis.go.kr/ws/rest/busarrivalservice/station?serviceKey=yt0l1Mg%2FKtX60m%2B69cYQn%2BOIKLJEq3NMxGQDtVon3JJMgJMV4aRyIEChiBKM1Gi6EzwmOeP1dNQRSRTlPg9cvg%3D%3D&stationId=' + str(stationId))
     dicts = xmltodict.parse(data.text)
     jsons = json.loads(json.dumps(dicts))
+    pprint(jsons)
+    
     resultData = {}
     busArrivalList = []
     resultBody = {}
     resultHeader= {}
-    pprint(jsons)
-    if jsons['response']['msgHeader']['resultCode'] == "0":
-        lists = jsons['response']['msgBody']['busArrivalList']
+    
+    if data.status_code == 200 and jsons['response']['msgHeader']['resultCode'] == "0":         # 정상 
+        lists = jsons['response']['msgBody']['busArrivalList']                                  #2개이상이면 배열로오고 1개이면 단일 객체로 오는 객체임 
         if type(lists) == type(list()):
             for item in lists:
                 tmp = {}
@@ -41,9 +41,6 @@ def getArrivalInformation(stationId):
                 busArrivalList.append(tmp)
                 resultBody['busArrivalList'] = busArrivalList
                 
-                resultHeader['resultCode'] = '10'
-                resultHeader['resultMsg'] = resultMsg[0]
-                
         else:
             tmp = {}
             tmp['routeId'] = lists['routeId']
@@ -58,17 +55,23 @@ def getArrivalInformation(stationId):
                 tmp['predictTime2'] = lists['predictTime2']
             busArrivalList.append(tmp)
             resultBody['busArrivalList'] = busArrivalList
-                
-            resultHeader['resultCode'] = '10'
-            resultHeader['resultMsg'] = resultMsg[0]
-            
-        resultData['resultHeader'] = resultHeader
-        resultData['resultBody'] = resultBody
+                        
+        resultHeader['resultCode'] = '0'
+        resultHeader['resultMsg'] = resultMsg[0]
+        
+        
             
     elif jsons['response']['msgHeader']['resultCode'] == "4":
-        resultHeader['resultCode'] = '11'
+        resultHeader['resultCode'] = '1'
         resultHeader['resultMsg'] = resultMsg[1]
-        resultData['resultHeader'] = resultHeader
+    
+    else :
+        resultHeader['resultCode'] = '9'
+        resultHeader['resultMsg'] = '알 수 없는 오류입니다.'
+        
+    resultData['resultHeader'] = resultHeader
+    resultData['resultBody'] = resultBody
+    print('resultData ------------------------------------------------------------------')
     pprint(resultData)
     return resultData
     

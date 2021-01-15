@@ -3,14 +3,48 @@ from pprint import pprint
 import xmltodict
 import json
 
+
+resultMsg = [
+    '정상 처리',
+    '네트워크 오류',
+    '결과가 존재하지 않습니다.',
+    '알 수 없는 오류입니다.'
+]
+
+# 0 : 정상처리
+# 1 : 네트워크 오류
+# 2 : 결과없음 
+# 3 : 알 수 없는 오류 
+
 def getNearlyStationList(latitude, longitude):
     data = requests.get('http://openapi.gbis.go.kr/ws/rest/busstationservice/searcharound?serviceKey=yt0l1Mg%2FKtX60m%2B69cYQn%2BOIKLJEq3NMxGQDtVon3JJMgJMV4aRyIEChiBKM1Gi6EzwmOeP1dNQRSRTlPg9cvg%3D%3D&x=' + str(longitude) + '&y=' + str(latitude))
     dicts = xmltodict.parse(data.text)
     jsons = json.loads(json.dumps(dicts))
-    
+    pprint(jsons)
+    resultHeader = {}
+    resultBody = {}
     returnData = {}
-    pprint(jsons['response']['msgBody']['busStationAroundList'])
-    
-    returnData['nearlyStationList'] = jsons['response']['msgBody']['busStationAroundList']
+    if data.status_code == 200:         # 정상
+        print(jsons['response']['msgHeader']['resultCode'])
+        try:
+            if jsons['response']['msgHeader']['resultCode'] == '0' :
+                resultBody['nearlyStationList'] = jsons['response']['msgBody']['busStationAroundList']
+                resultHeader['resultCode'] = '0'
+                resultHeader['resultMsg'] = resultMsg[0]
+            else:
+                resultHeader['resultCode'] = '2'
+                resultHeader['resultMsg'] = resultMsg[2]
+                
+        except:
+            resultHeader['resultCode'] = '3'
+            resultHeader['resultMsg'] = resultMsg[3]
+    else:                               # 네트워크 오류 
+        resultHeader['resultCode'] = '1'
+        resultHeader['resultMsg'] = resultMsg[1]
+ 
+    returnData['resultHeader'] = resultHeader
+    returnData['resultBody'] = resultBody 
+    print("returnData =--------------------------------------------------------------------------------------------------------------------------------------")
+    pprint(returnData)
     
     return returnData

@@ -3,7 +3,13 @@ from pprint import pprint
 import xmltodict
 import json
 
-resultMsg = ['정상처리', '운영정보 통신 에러', '노선 ID value Error', '정거장리스트 통신 에러', '노선 리스트 정보 에러', '관할지역이 아닙니다.', '노선 ID value Error']    
+resultMsg = [
+    '정상처리', 
+    '운영정보 통신 에러', 
+    '노선 ID value Error', 
+    '정거장리스트 통신 에러', 
+    '관할지역이 아닙니다.'
+]    
 
 
 # 0 : 정상처리
@@ -11,7 +17,6 @@ resultMsg = ['정상처리', '운영정보 통신 에러', '노선 ID value Erro
 # 2 : 노선 ID value Error 
 # 3 : 정거장리스트 통신 에러
 # 4 : 관할지역 아님 
-# 5 : 노선ID value Error
 # 9 : 알수없는 오류입니다.
 def getRouteInfo(routeId):
     
@@ -31,8 +36,8 @@ def getRouteInfo(routeId):
             operationInfo['downFirstTime'] = jsons['response']['msgBody']['busRouteInfoItem']['downFirstTime']
             # 옵션값 
         except:
-            
             operationInfo['downFirstTime'] = "제공되지 않습니다."
+            
         try: 
             operationInfo['downLastTime'] = jsons['response']['msgBody']['busRouteInfoItem']['downLastTime']
             # 옵션값 
@@ -96,8 +101,6 @@ def getRouteInfo(routeId):
         resultHeader['resultCode'] = "0"
         resultHeader['resultMsg'] = resultMsg[0]
         
-        resultData['resultHeader'] = resultHeader
-        
         data = requests.get('http://openapi.gbis.go.kr/ws/rest/busrouteservice/station?serviceKey=yt0l1Mg%2FKtX60m%2B69cYQn%2BOIKLJEq3NMxGQDtVon3JJMgJMV4aRyIEChiBKM1Gi6EzwmOeP1dNQRSRTlPg9cvg%3D%3D&routeId=' + str(routeId))    
         dicts = xmltodict.parse(data.text)
         jsons = json.loads(json.dumps(dicts))
@@ -117,40 +120,37 @@ def getRouteInfo(routeId):
                 stationLists.append(tmp)
                   
             resultBody['stationLists'] = stationLists
-            resultData['resultBody'] = resultBody
             
         elif data.status_code != 200:
             resultHeader['resultCode'] = "3"
             resultHeader['resultMsg'] = resultMsg[3]
-            resultData['resultHeader'] = resultHeader
             
         elif resultBody['districtCd'] != "2":
             resultHeader['resultCode'] = "4"
             resultHeader['resultMsg'] = resultMsg[4]
-            resultData['resultHeader'] = resultHeader
             
-        elif jsons['response']['msgHeader']['resultCode'] == "0":
+        elif jsons['response']['msgHeader']['resultCode'] != "0":
             resultHeader['resultCode'] = "2"
             resultHeader['resultMsg'] = resultMsg[2]
-            resultData['resultHeader'] = resultHeader
+            
         else:
             resultHeader['resultCode'] = "9"
-            resultHeader['resultMsg'] = "알수없는 오류입니다."
-            resultData['resultHeader'] = resultHeader
+            resultHeader['resultMsg'] = "알 수 없는 오류입니다."
 
         
     else:
         if data.status_code != 200:
             resultHeader['resultCode'] = "1"
             resultHeader['resultMsg'] = resultMsg[1]
-            resultData['resultHeader'] = resultHeader
         elif jsons['response']['msgHeader']['resultCode'] != "0":
             resultHeader['resultCode'] = "2"
             resultHeader['resultMsg'] = resultMsg[2]
-            resultData['resultHeader'] = resultHeader
+            
         else:
             resultHeader['resultCode'] = "9"
-            resultHeader['resultMsg'] = "알수없는 오류입니다."
-            resultData['resultHeader'] = resultHeader
+            resultHeader['resultMsg'] = "알 수 없는 오류입니다."
+            
     
+    resultData['resultHeader'] = resultHeader
+    resultData['resultBody'] = resultBody
     return resultData
