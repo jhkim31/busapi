@@ -3,20 +3,17 @@ from pprint import pprint
 import xmltodict
 import json
 
-
-
 resultMsg = [
     '정상처리',
     '오류'
 ]    
-
- 
     
-def getStationInfo(routeId):
-    tmp = {}
+def getCurrentLocation(routeId):
     resultHeader = {}
     resultBody = {}
     resultData = {}
+    tmp = {}
+    busLocationList = []
     data = requests.get('http://openapi.gbis.go.kr/ws/rest/buslocationservice?serviceKey=yt0l1Mg%2FKtX60m%2B69cYQn%2BOIKLJEq3NMxGQDtVon3JJMgJMV4aRyIEChiBKM1Gi6EzwmOeP1dNQRSRTlPg9cvg%3D%3D&routeId=' + str(routeId))
         
     dicts = xmltodict.parse(data.text)
@@ -30,8 +27,8 @@ def getStationInfo(routeId):
         resultHeader['resultMsg'] = resultMsg[0] 
         
         if type(jsons['response']['msgBody']['busLocationList']) == type(list()):                    # 정상 호출 and 배열로 올때 (2개 이상)
-            busLocationList = []
             for item in jsons['response']['msgBody']['busLocationList']:
+                tmp= {}
                 tmp['stationId'] = item["stationId"]
                 tmp['stationSeq'] = item['stationSeq']
                 tmp['remainSeatCnt'] = item['remainSeatCnt']

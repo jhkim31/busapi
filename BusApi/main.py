@@ -7,6 +7,8 @@ from Method.getArrivalInformation import getArrivalInformation
 from Method.getCurrentLocation import getCurrentLocation
 
 
+
+
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 
@@ -37,6 +39,7 @@ def getNearlyStation():
 def getArrival():
     stationId = request.args.get('stationId')
     return getArrivalInformation(stationId)
+
 @app.route('/getCurrentLocation')
 def getCurrent():
     routeId = request.args.get('routeId')

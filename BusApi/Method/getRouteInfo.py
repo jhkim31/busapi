@@ -19,14 +19,14 @@ resultMsg = [
 # 4 : 관할지역 아님 
 # 9 : 알수없는 오류입니다.
 def getRouteInfo(routeId):
-    
+    # BUSAPI 6
     data = requests.get('http://openapi.gbis.go.kr/ws/rest/busrouteservice/info?serviceKey=yt0l1Mg%2FKtX60m%2B69cYQn%2BOIKLJEq3NMxGQDtVon3JJMgJMV4aRyIEChiBKM1Gi6EzwmOeP1dNQRSRTlPg9cvg%3D%3D&routeId=' + str(routeId))    
     dicts = xmltodict.parse(data.text)
     jsons = json.loads(json.dumps(dicts))
     operationInfo = {}
     resultData = {}
     resultHeader = {}
-    resultBody = {}    
+    resultBody = {}
     if data.status_code == 200 and jsons['response']['msgHeader']['resultCode'] == "0":
         routeId = jsons['response']['msgBody']['busRouteInfoItem']['routeId']
         routeName = jsons['response']['msgBody']['busRouteInfoItem']['routeName']
@@ -98,9 +98,9 @@ def getRouteInfo(routeId):
         resultBody['operationInfo'] = operationInfo
         resultBody['districtCd'] = districtCd
         
-        resultHeader['resultCode'] = "0"
-        resultHeader['resultMsg'] = resultMsg[0]
         
+        
+        #BUSAPI 5
         data = requests.get('http://openapi.gbis.go.kr/ws/rest/busrouteservice/station?serviceKey=yt0l1Mg%2FKtX60m%2B69cYQn%2BOIKLJEq3NMxGQDtVon3JJMgJMV4aRyIEChiBKM1Gi6EzwmOeP1dNQRSRTlPg9cvg%3D%3D&routeId=' + str(routeId))    
         dicts = xmltodict.parse(data.text)
         jsons = json.loads(json.dumps(dicts))
@@ -118,7 +118,9 @@ def getRouteInfo(routeId):
                 tmp['turnYn'] = station['turnYn']
                 tmp['stationSeq'] = station['stationSeq']
                 stationLists.append(tmp)
-                  
+             
+            resultHeader['resultCode'] = "0"
+            resultHeader['resultMsg'] = resultMsg[0]     
             resultBody['stationLists'] = stationLists
             
         elif data.status_code != 200:
@@ -142,15 +144,10 @@ def getRouteInfo(routeId):
         if data.status_code != 200:
             resultHeader['resultCode'] = "1"
             resultHeader['resultMsg'] = resultMsg[1]
-        elif jsons['response']['msgHeader']['resultCode'] != "0":
+        else:
             resultHeader['resultCode'] = "2"
             resultHeader['resultMsg'] = resultMsg[2]
             
-        else:
-            resultHeader['resultCode'] = "9"
-            resultHeader['resultMsg'] = "알 수 없는 오류입니다."
-            
-    
     resultData['resultHeader'] = resultHeader
     resultData['resultBody'] = resultBody
     return resultData

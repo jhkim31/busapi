@@ -24,7 +24,7 @@ def getNearlyStationList(latitude, longitude):
     resultHeader = {}
     resultBody = {}
     returnData = {}
-    if data.status_code == 200:         # 정상
+    if data.status_code == 200 and jsons['response']['msgHeader']['resultCode'] == "0":         # 정상
         print(jsons['response']['msgHeader']['resultCode'])
         try:
             if jsons['response']['msgHeader']['resultCode'] == '0' :

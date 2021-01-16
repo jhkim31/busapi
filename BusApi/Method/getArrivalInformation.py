@@ -5,7 +5,7 @@ import json
 
 resultMsg = [
     '정상처리', 
-    '남은 버스가 없습니다'
+    '오류'
 ]   
 
 
@@ -24,6 +24,7 @@ def getArrivalInformation(stationId):
     resultHeader= {}
     
     if data.status_code == 200 and jsons['response']['msgHeader']['resultCode'] == "0":         # 정상 
+        print("정상처리")
         lists = jsons['response']['msgBody']['busArrivalList']                                  #2개이상이면 배열로오고 1개이면 단일 객체로 오는 객체임 
         if type(lists) == type(list()):
             for item in lists:
@@ -40,7 +41,6 @@ def getArrivalInformation(stationId):
                     tmp['predictTime2'] = item['predictTime2']
                 busArrivalList.append(tmp)
                 resultBody['busArrivalList'] = busArrivalList
-                
         else:
             tmp = {}
             tmp['routeId'] = lists['routeId']
@@ -60,14 +60,15 @@ def getArrivalInformation(stationId):
         resultHeader['resultMsg'] = resultMsg[0]
         
         
-            
-    elif jsons['response']['msgHeader']['resultCode'] == "4":
+    else:
+        if data.status_code != 200:
+            print("통신 오류 ")
+        elif jsons['response']['msgHeader']['resultCode'] == "4":
+            print("Value Error")
+        else :
+            print("알 수 없는 오류")
         resultHeader['resultCode'] = '1'
         resultHeader['resultMsg'] = resultMsg[1]
-    
-    else :
-        resultHeader['resultCode'] = '9'
-        resultHeader['resultMsg'] = '알 수 없는 오류입니다.'
         
     resultData['resultHeader'] = resultHeader
     resultData['resultBody'] = resultBody
