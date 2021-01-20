@@ -7,19 +7,10 @@ import json
 
 resultMsg = [
     '정상처리', 
-    '정류소 정보를 가져오던 중 통신 에러가 발생했습니다.', 
-    '정류소 정보를 가져오던 중 value Error가 발생했습니다. 관할지역이 아닐 수 있습니다.', 
-    '노선 리스트를 가져오던 중 통신 에러가 발했습니다.', 
-    '관할 지역이 아닙니다 (서울 / 인천) ', 
-    '노선 리스트를 가져오던 중 value Error가 발생했습니다.' 
+    '오류'
 ]    
 
-# 0 : 정상처리
-# 1 : 정류소 통신에러
-# 2 : 정류소 정보 에러 
-# 3 : 노선리스트 통신 에러
-# 4 : 관할지역 아님 
-# 5 : 노선 리스트 value Error
+
  
     
 def getStationInfo(mobileNo, stationId):
@@ -77,30 +68,25 @@ def getStationInfo(mobileNo, stationId):
             resultHeader['resultMsg'] = resultMsg[0]
                  
             resultBody['throughRouteList'] = throughRouteList                                           # 정상 진행 
+            
         else :
             if data.status_code != 200:                                                                                         # 리스트 통신 에
                 print("통신에러")
-                resultHeader['resultCode'] = '3'
-                resultHeader['resultMsg'] = resultMsg[3]
             elif resultBody['districtCd'] != "2":
                 print("관할지역이 아닙니다 (서울 또는 인천)")
-                print(resultBody['districtCd'])
-                resultHeader['resultCode'] = '4'
-                resultHeader['resultMsg'] = resultMsg[4]
             else:
                 print('노선 리스트 value Error')
-                resultHeader['resultCode'] = '5'
-                resultHeader['resultMsg'] = resultMsg[5]
+            resultHeader['resultCode'] = '1'
+            resultHeader['resultMsg'] = resultMsg[1]
+                
         
     else:
         if data.status_code != 200:
             print("통신오류")
-            resultHeader['resultCode'] = '1'
-            resultHeader['resultMsg'] = resultMsg[1]
         else:
             print("value Error")
-            resultHeader['resultCode'] = '2'
-            resultHeader['resultMsg'] = resultMsg[2]
+        resultHeader['resultCode'] = '1'
+        resultHeader['resultMsg'] = resultMsg[1]
     
 
             

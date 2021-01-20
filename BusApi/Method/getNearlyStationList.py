@@ -6,9 +6,7 @@ import json
 
 resultMsg = [
     '정상 처리',
-    '네트워크 오류',
-    '결과가 존재하지 않습니다.',
-    '알 수 없는 오류입니다.'
+    '오류'
 ]
 
 # 0 : 정상처리
@@ -32,13 +30,16 @@ def getNearlyStationList(latitude, longitude):
                 resultHeader['resultCode'] = '0'
                 resultHeader['resultMsg'] = resultMsg[0]
             else:
-                resultHeader['resultCode'] = '2'
-                resultHeader['resultMsg'] = resultMsg[2]
+                print("결과가 없습니다.")
+                resultHeader['resultCode'] = '1'
+                resultHeader['resultMsg'] = resultMsg[1]
                 
         except:
-            resultHeader['resultCode'] = '3'
-            resultHeader['resultMsg'] = resultMsg[3]
-    else:                               # 네트워크 오류 
+            print("알 수 없는 오류 ")
+            resultHeader['resultCode'] = '1'
+            resultHeader['resultMsg'] = resultMsg[1]
+    else:                       
+        print("통신오류, ValueError") 
         resultHeader['resultCode'] = '1'
         resultHeader['resultMsg'] = resultMsg[1]
  

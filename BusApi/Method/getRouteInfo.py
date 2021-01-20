@@ -5,10 +5,7 @@ import json
 
 resultMsg = [
     '정상처리', 
-    '운영정보 통신 에러', 
-    '노선 ID value Error', 
-    '정거장리스트 통신 에러', 
-    '관할지역이 아닙니다.'
+    '오류'
 ]    
 
 
@@ -123,31 +120,32 @@ def getRouteInfo(routeId):
             resultHeader['resultMsg'] = resultMsg[0]     
             resultBody['stationLists'] = stationLists
             
-        elif data.status_code != 200:
-            resultHeader['resultCode'] = "3"
-            resultHeader['resultMsg'] = resultMsg[3]
-            
-        elif resultBody['districtCd'] != "2":
-            resultHeader['resultCode'] = "4"
-            resultHeader['resultMsg'] = resultMsg[4]
-            
-        elif jsons['response']['msgHeader']['resultCode'] != "0":
-            resultHeader['resultCode'] = "2"
-            resultHeader['resultMsg'] = resultMsg[2]
-            
         else:
-            resultHeader['resultCode'] = "9"
-            resultHeader['resultMsg'] = "알 수 없는 오류입니다."
+            if data.status_code != 200:
+                print("통신 에러")
+            elif resultBody['districtCd'] != "2":
+                print("관할 지역이 아닙니다. ")
+                
+            elif jsons['response']['msgHeader']['resultCode'] != "0":
+                print("value Error")
+            else:
+                print("알 수 없는 오류 ")
+            resultHeader['resultCode'] = "1"
+            resultHeader['resultMsg'] = resultMsg[1]
 
         
     else:
         if data.status_code != 200:
-            resultHeader['resultCode'] = "1"
-            resultHeader['resultMsg'] = resultMsg[1]
+            print("통신 에러 ")
         else:
-            resultHeader['resultCode'] = "2"
-            resultHeader['resultMsg'] = resultMsg[2]
+            print("Value Error")
+            
+        resultHeader['resultCode'] = "1"
+        resultHeader['resultMsg'] = resultMsg[1]
+            
             
     resultData['resultHeader'] = resultHeader
     resultData['resultBody'] = resultBody
+    print("=======================================================================")
+    pprint(resultData)
     return resultData

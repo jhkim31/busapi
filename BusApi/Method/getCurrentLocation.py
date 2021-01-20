@@ -42,8 +42,14 @@ def getCurrentLocation(routeId):
         resultBody['busLocationList'] = busLocationList
         
     else:
-        resultHeader['resultCode'] = '1'
-        resultHeader['resultMsg'] = resultMsg[1]
+        if jsons['response']['msgHeader']['resultCode'] == "4":
+            print("남은 버스가 없습니다.")
+            resultHeader['resultCode'] = '0'
+            resultHeader['resultMsg'] = resultMsg[0]
+            resultBody['busLocationList'] = busLocationList
+        else:
+            resultHeader['resultCode'] = '1'
+            resultHeader['resultMsg'] = resultMsg[1]
         
     resultData['resultHeader'] = resultHeader
     resultData['resultBody'] = resultBody    
