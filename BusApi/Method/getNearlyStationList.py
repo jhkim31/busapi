@@ -22,11 +22,15 @@ def getNearlyStationList(latitude, longitude):
     resultHeader = {}
     resultBody = {}
     returnData = {}
+    nearlyStationList = []
     if data.status_code == 200 and jsons['response']['msgHeader']['resultCode'] == "0":         # 정상
         print(jsons['response']['msgHeader']['resultCode'])
         try:
-            if jsons['response']['msgHeader']['resultCode'] == '0' :
-                resultBody['nearlyStationList'] = jsons['response']['msgBody']['busStationAroundList']
+            if jsons['response']['msgHeader']['resultCode'] == '0' :                
+                for station in jsons['response']['msgBody']['busStationAroundList']:
+                    if station['mobileNo'] != '00000':
+                        nearlyStationList.append(station)
+                resultBody['nearlyStationList'] = nearlyStationList    
                 resultHeader['resultCode'] = '0'
                 resultHeader['resultMsg'] = resultMsg[0]
             else:
@@ -34,7 +38,8 @@ def getNearlyStationList(latitude, longitude):
                 resultHeader['resultCode'] = '1'
                 resultHeader['resultMsg'] = resultMsg[1]
                 
-        except:
+        except Exception as e:
+            print(e)
             print("알 수 없는 오류 ")
             resultHeader['resultCode'] = '1'
             resultHeader['resultMsg'] = resultMsg[1]
